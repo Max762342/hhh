@@ -3,59 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kewin Hage Meier - Offizielle Webseite</title>
+    <title>Seite momentan nicht erreichbar</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #030303;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
-        .container {
-            background-color: #1e293b;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            max-width: 600px;
-            width: 100%;
+
+        /* Präziser, organischer Licht-Hintergrund aus dem Design */
+        .ambient-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .light-shape {
+            position: absolute;
+            top: -20vh;
+            left: -20vw;
+            width: 80vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at 20% 30%, rgba(70, 70, 80, 0.28) 0%, rgba(20, 20, 25, 0.08) 50%, transparent 75%);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(50px);
+            animation: morphAndMove 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes morphAndMove {
+            0% {
+                transform: translate(0px, 0px) scale(1) rotate(0deg);
+                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            }
+            50% {
+                transform: translate(40px, 30px) scale(1.05) rotate(3deg);
+                border-radius: 50% 50% 50% 50% / 60% 40% 60% 40%;
+            }
+            100% {
+                transform: translate(-20px, 50px) scale(0.96) rotate(-2deg);
+                border-radius: 35% 65% 60% 40% / 50% 60% 40% 50%;
+            }
+        }
+
+        /* Inhalt im Vordergrund */
+        .content {
+            position: relative;
+            z-index: 2;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            padding: 20px;
         }
-        h1 { color: #38bdf8; margin-bottom: 10px; }
-        h2 { color: #94a3b8; font-size: 1.1rem; margin-top: 0; margin-bottom: 25px; }
-        p { line-height: 1.6; color: #cbd5e1; }
-        .badge {
-            display: inline-block;
-            background-color: #0369a1;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            margin: 5px;
+
+        h1 {
+            font-size: 1.65rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            color: #ededef;
+        }
+
+        .btn {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 22px;
+            font-size: 0.88rem;
+            font-weight: 400;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Kewin Hage Meier</h1>
-        <h2>Visionär, Entwickler & digitaler Kopf</h2>
-        
-        <p>
-            Willkommen auf meiner persönlichen Seite! Ich bin Kewin Hage Meier, ein technikbegeisterter Erfinder und kreativer Geist. 
-            Wenn ich nicht gerade an neuen digitalen Projekten tüftele, beschäftige ich mich mit der Zukunft der Web-Entwicklung, 
-            künstlicher Intelligenz und smarter Automatisierung.
-        </p>
+    <!-- Animierter Hintergrund -->
+    <div class="ambient-background">
+        <div class="light-shape"></div>
+    </div>
 
-        <div>
-            <span class="badge">Innovation</span>
-            <span class="badge">Web-Entwicklung</span>
-            <span class="badge">Sicherheit</span>
-        </div>
+    <!-- Minimalistischer Text & Button -->
+    <div class="content">
+        <h1>Seite momentan nicht erreichbar</h1>
+        <a href="javascript:window.location.reload();" class="btn">Erneut versuchen</a>
     </div>
 
 </body>
