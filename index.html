@@ -1,114 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Denied / Unauthorized</title>
-    <!-- Einbindung der modernen Schriftart 'Inter' -->
+    <title>808 • Wartungsarbeiten / Maintenance</title>
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: #030303;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Animierter Licht-Hintergrund */
-        .ambient-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .light-shape {
-            position: absolute;
-            top: -20vh;
-            left: -20vw;
-            width: 80vw;
-            height: 100vh;
-            background: radial-gradient(ellipse at 20% 30%, rgba(70, 70, 80, 0.28) 0%, rgba(20, 20, 25, 0.08) 50%, transparent 75%);
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-            filter: blur(50px);
-            animation: morphAndMove 14s ease-in-out infinite alternate;
-        }
-
-        @keyframes morphAndMove {
-            0% {
-                transform: translate(0px, 0px) scale(1) rotate(0deg);
-                border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-            }
-            50% {
-                transform: translate(40px, 30px) scale(1.05) rotate(3deg);
-                border-radius: 50% 50% 50% 50% / 60% 40% 60% 40%;
-            }
-            100% {
-                transform: translate(-20px, 50px) scale(0.96) rotate(-2deg);
-                border-radius: 35% 65% 60% 40% / 50% 60% 40% 50%;
-            }
-        }
-
-        /* Inhalt im Vordergrund */
-        .content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 1.65rem;
-            font-weight: 500;
-            letter-spacing: -0.02em;
-            color: #ededef;
-        }
-
-        .btn {
-            background-color: rgba(255, 255, 255, 0.06);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 22px;
-            font-size: 0.88rem;
-            font-weight: 500;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn:hover {
-            background-color: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.22);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Externe CSS-Datei -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -117,11 +18,92 @@
         <div class="light-shape"></div>
     </div>
 
-    <!-- Inhalt -->
-    <div class="content">
-        <h1>You are not authorized to access this website</h1>
-        <a href="javascript:window.location.reload();" class="btn">Try again</a>
+    <!-- Oben Links: Logo / 808 Badge -->
+    <div class="top-left">
+        <div class="brand-badge">
+            <span class="dot"></span>
+            <span>808</span>
+        </div>
     </div>
 
+    <!-- Oben Rechts: Sprachumschalter (DE / ENG) -->
+    <div class="top-right">
+        <div class="lang-switch">
+            <button id="btn-de" class="lang-btn active" onclick="setLanguage('de')">DE</button>
+            <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
+        </div>
+    </div>
+
+    <!-- Hauptinhalt in der Mitte -->
+    <div class="content-card">
+        <div class="status-pill" data-key="status">Wartungsarbeiten • Maintenance</div>
+        
+        <h1 data-key="title">808 Service ist derzeit in Wartungsarbeiten</h1>
+        
+        <p class="description" data-key="desc">
+            Wir führen gerade planmäßige Systemupdates durch, um unsere Dienste für Sie zu verbessern. Wir sind in Kürze wieder da.
+        </p>
+
+        <div class="button-group">
+            <button class="btn btn-primary" id="retryBtn" onclick="handleRetry()">
+                <span data-key="btnRetry">Erneut versuchen</span>
+            </button>
+            <a href="mailto:support@808.internal" class="btn btn-secondary">
+                <span data-key="btnSupport">Support kontaktieren</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript für Sprachwechsel und Ladeanimation -->
+    <script>
+        const translations = {
+            de: {
+                status: "Wartungsarbeiten • Maintenance",
+                title: "808 Service ist derzeit in Wartungsarbeiten",
+                desc: "Wir führen gerade planmäßige Systemupdates durch, um unsere Dienste für Sie zu verbessern. Wir sind in Kürze wieder da.",
+                btnRetry: "Erneut versuchen",
+                btnSupport: "Support kontaktieren",
+                connecting: "Verbinde..."
+            },
+            en: {
+                status: "Maintenance • 808 Service",
+                title: "808 Service is currently undergoing maintenance",
+                desc: "We are performing scheduled system updates to improve our services. We will be back online shortly.",
+                btnRetry: "Try again",
+                btnSupport: "Contact Support",
+                connecting: "Connecting..."
+            }
+        };
+
+        let currentLang = 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            
+            // Aktiven Button umschalten
+            document.getElementById('btn-de').classList.toggle('active', lang === 'de');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+            // Texte aktualisieren
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+        }
+
+        function handleRetry() {
+            const btn = document.getElementById('retryBtn');
+            const textSpan = btn.querySelector('span');
+            btn.classList.add('is-loading');
+            textSpan.innerText = translations[currentLang].connecting;
+            
+            setTimeout(() => {
+                window.location.reload();
+            }, 600);
+        }
+    </script>
 </body>
 </html>
