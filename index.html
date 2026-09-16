@@ -3,107 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>808 • Wartungsarbeiten / Maintenance</title>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Externe CSS-Datei -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <!-- Animierter Hintergrund -->
-    <div class="ambient-background">
-        <div class="light-shape"></div>
-    </div>
-
-    <!-- Oben Links: Logo / 808 Badge -->
-    <div class="top-left">
-        <div class="brand-badge">
-            <span class="dot"></span>
-            <span>808</span>
-        </div>
-    </div>
-
-    <!-- Oben Rechts: Sprachumschalter (DE / ENG) -->
-    <div class="top-right">
-        <div class="lang-switch">
-            <button id="btn-de" class="lang-btn active" onclick="setLanguage('de')">DE</button>
-            <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
-        </div>
-    </div>
-
-    <!-- Hauptinhalt in der Mitte -->
-    <div class="content-card">
-        <div class="status-pill" data-key="status">Wartungsarbeiten • Maintenance</div>
-        
-        <h1 data-key="title">808 Service ist derzeit in Wartungsarbeiten</h1>
-        
-        <p class="description" data-key="desc">
-            Wir führen gerade planmäßige Systemupdates durch, um unsere Dienste für Sie zu verbessern. Wir sind in Kürze wieder da.
-        </p>
-
-        <div class="button-group">
-            <button class="btn btn-primary" id="retryBtn" onclick="handleRetry()">
-                <span data-key="btnRetry">Erneut versuchen</span>
-            </button>
-            <a href="mailto:support@808.internal" class="btn btn-secondary">
-                <span data-key="btnSupport">Support kontaktieren</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- JavaScript für Sprachwechsel und Ladeanimation -->
+    <title>Server Status & Dashboard</title>
+    <!-- Google Fonts & Tailwind CSS für modernes Design -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        const translations = {
-            de: {
-                status: "Wartungsarbeiten • Maintenance",
-                title: "808 Service ist derzeit in Wartungsarbeiten",
-                desc: "Wir führen gerade planmäßige Systemupdates durch, um unsere Dienste für Sie zu verbessern. Wir sind in Kürze wieder da.",
-                btnRetry: "Erneut versuchen",
-                btnSupport: "Support kontaktieren",
-                connecting: "Verbinde..."
-            },
-            en: {
-                status: "Maintenance • 808 Service",
-                title: "808 Service is currently undergoing maintenance",
-                desc: "We are performing scheduled system updates to improve our services. We will be back online shortly.",
-                btnRetry: "Try again",
-                btnSupport: "Contact Support",
-                connecting: "Connecting..."
-            }
-        };
-
-        let currentLang = 'de';
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            
-            // Aktiven Button umschalten
-            document.getElementById('btn-de').classList.toggle('active', lang === 'de');
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-
-            // Texte aktualisieren
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang][key]) {
-                    el.innerText = translations[lang][key];
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darker: '#0f172a',
+                        card: '#1e293b'
+                    }
                 }
-            });
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-darker text-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- ANSICHT 1: Server nicht verfügbar (Standard beim Start) -->
+    <div id="offline-view" class="w-full max-w-md bg-card border border-slate-800 p-8 rounded-2xl shadow-2xl text-center transition-all duration-300">
+        <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-rose-500/10 rounded-full border border-rose-500/20">
+            <span class="absolute w-full h-full rounded-full bg-rose-500/20 animate-ping"></span>
+            <svg class="w-10 h-10 text-rose-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-12.728 12.728m0-12.728l12.728 12.728"></path>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight mb-2">Dieser Server ist derzeit nicht verfügbar</h1>
+        <p class="text-slate-400 text-sm mb-6">Wir versuchen automatisch, die Verbindung wiederherzustellen...</p>
+        
+        <div class="inline-flex items-center space-x-2 bg-slate-900/60 border border-slate-800 px-4 py-2 rounded-full text-xs text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+            <span id="status-text">Prüfe Verbindung...</span>
+        </div>
+    </div>
+
+    <!-- ANSICHT 2: 808 Dashboard (Wird angezeigt, wenn erreichbar) -->
+    <div id="dashboard-view" class="hidden w-full max-w-4xl bg-card border border-slate-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
+        <!-- Dashboard Header -->
+        <div class="bg-slate-900/50 border-b border-slate-800 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <h1 class="text-xl font-bold tracking-tight">808 Dashboard</h1>
+                </div>
+                <p class="text-xs text-slate-400">Verbunden mit: <span class="text-slate-200 font-mono">tableful-lustfully-dash.ngrok-free.dev</span></p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="restartServer()" id="restart-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <span>Server Neustarten</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Widgets / Funktionen -->
+        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Widget 1 -->
+            <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-xl">
+                <div class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Live Status</div>
+                <div class="text-2xl font-bold text-emerald-400 mb-1">Aktiv</div>
+                <div class="text-xs text-slate-500">Antwortzeit: <span id="ping-time" class="text-slate-300 font-mono">-- ms</span></div>
+            </div>
+
+            <!-- Widget 2 -->
+            <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-xl">
+                <div class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Echtzeit-Uptime</div>
+                <div id="uptime-clock" class="text-2xl font-bold text-slate-200 font-mono mb-1">00:00:00</div>
+                <div class="text-xs text-slate-500">Seit letztem Check</div>
+            </div>
+
+            <!-- Widget 3 -->
+            <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-xl">
+                <div class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Auto-Aktualisierung</div>
+                <div class="text-2xl font-bold text-indigo-400 mb-1">Aktiv</div>
+                <div class="text-xs text-slate-500">Prüfintervall: Alle 3 Sek.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript für Echtzeit-Logik -->
+    <script>
+        const targetUrl = "https://tableful-lustfully-dash.ngrok-free.dev";
+        const offlineView = document.getElementById('offline-view');
+        const dashboardView = document.getElementById('dashboard-view');
+        const statusText = document.getElementById('status-text');
+        const pingTimeEl = document.getElementById('ping-time');
+        const uptimeClock = document.getElementById('uptime-clock');
+
+        let isOnline = false;
+        let startTime = Date.now();
+        let timerInterval = null;
+
+        // Funktion zum Prüfen des Status (CORS-freundlich per 'no-cors' oder Bild/Fetch-Request)
+        async function checkServerStatus() {
+            const startTimestamp = Date.now();
+            try {
+                // Ein Fetch-Versuch auf die ngrok-URL. 
+                // Da ngrok standardmäßig eine Browser-Warnseite vorschalten kann, nutzen wir mode: 'no-cors'
+                await fetch(targetUrl, { mode: 'no-cors', cache: 'no-store' });
+                
+                const latency = Date.now() - startTimestamp;
+                setOnlineState(latency);
+            } catch (error) {
+                setOfflineState();
+            }
         }
 
-        function handleRetry() {
-            const btn = document.getElementById('retryBtn');
-            const textSpan = btn.querySelector('span');
-            btn.classList.add('is-loading');
-            textSpan.innerText = translations[currentLang].connecting;
-            
-            setTimeout(() => {
-                window.location.reload();
-            }, 600);
+        function setOnlineState(latency) {
+            if (!isOnline) {
+                isOnline = true;
+                startTime = Date.now(); // Uptime zurücksetzen bei neuem Verbindungsaufbau
+                offlineView.classList.add('hidden');
+                dashboardView.classList.remove('hidden');
+                
+                if(!timerInterval) {
+                    timerInterval = setInterval(updateUptime, 1000);
+                }
+            }
+            pingTimeEl.textContent = latency + " ms";
         }
+
+        function setOfflineState() {
+            if (isOnline) {
+                isOnline = false;
+                dashboardView.classList.add('hidden');
+                offlineView.classList.remove('hidden');
+                
+                if(timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }
+            statusText.textContent = "Server offline. Nächster Versuch in Kürze...";
+        }
+
+        function updateUptime() {
+            const diff = Math.floor((Date.now() - startTime) / 1000);
+            const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+            const seconds = String(diff % 60).padStart(2, '0');
+            uptimeClock.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        // Funktion für den "Server neuladen"-Button (Falls dein Backend einen Restart-Endpoint besitzt)
+        async function restartServer() {
+            const btn = document.getElementById('restart-btn');
+            btn.textContent = "Starte neu...";
+            btn.disabled = true;
+
+            try {
+                // Beispiel: Falls dein Server einen Endpunkt wie /restart hat, hier ansprechen:
+                // await fetch(targetUrl + '/restart', { mode: 'no-cors' });
+                
+                // Simulierter Neustart für die UI:
+                setTimeout(() => {
+                    alert("Neustart-Befehl gesendet!");
+                    btn.textContent = "Server Neustarten";
+                    btn.disabled = false;
+                }, 1500);
+            } catch (e) {
+                alert("Fehler beim Neustarten des Servers.");
+                btn.textContent = "Server Neustarten";
+                btn.disabled = false;
+            }
+        }
+
+        // Initial direkt prüfen und dann alle 3 Sekunden wiederholen
+        checkServerStatus();
+        setInterval(checkServerStatus, 3000);
     </script>
 </body>
 </html>
