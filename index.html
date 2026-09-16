@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Status & Dashboard</title>
-    <!-- Google Fonts & Tailwind CSS für modernes Design -->
+    <title>Willkommen</title>
+    <!-- Tailwind CSS für modernes Design -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,7 +26,7 @@
 </head>
 <body class="bg-darker text-slate-100 min-h-screen flex items-center justify-center p-4">
 
-    <!-- ANSICHT 1: Server nicht verfügbar (Standard beim Start) -->
+    <!-- ANSICHT 1: Server nicht verfügbar (Wenn ngrok offline ist) -->
     <div id="offline-view" class="w-full max-w-md bg-card border border-slate-800 p-8 rounded-2xl shadow-2xl text-center transition-all duration-300">
         <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-rose-500/10 rounded-full border border-rose-500/20">
             <span class="absolute w-full h-full rounded-full bg-rose-500/20 animate-ping"></span>
@@ -35,7 +35,7 @@
             </svg>
         </div>
         <h1 class="text-2xl font-bold tracking-tight mb-2">Dieser Server ist derzeit nicht verfügbar</h1>
-        <p class="text-slate-400 text-sm mb-6">Wir versuchen automatisch, die Verbindung wiederherzustellen...</p>
+        <p class="text-slate-400 text-sm mb-6">Bitte versuche es später noch einmal.</p>
         
         <div class="inline-flex items-center space-x-2 bg-slate-900/60 border border-slate-800 px-4 py-2 rounded-full text-xs text-slate-400">
             <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
@@ -43,140 +43,71 @@
         </div>
     </div>
 
-    <!-- ANSICHT 2: 808 Dashboard (Wird angezeigt, wenn erreichbar) -->
-    <div id="dashboard-view" class="hidden w-full max-w-4xl bg-card border border-slate-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
-        <!-- Dashboard Header -->
-        <div class="bg-slate-900/50 border-b border-slate-800 p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-                <div class="flex items-center space-x-2 mb-1">
-                    <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <h1 class="text-xl font-bold tracking-tight">808 Dashboard</h1>
-                </div>
-                <p class="text-xs text-slate-400">Verbunden mit: <span class="text-slate-200 font-mono">tableful-lustfully-dash.ngrok-free.dev</span></p>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button onclick="restartServer()" id="restart-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/20 flex items-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    <span>Server Neustarten</span>
-                </button>
+    <!-- ANSICHT 2: Etwas Völlig Anderes (Wird angezeigt, wenn ngrok erreichbar ist) -->
+    <div id="online-view" class="hidden w-full max-w-xl bg-card border border-slate-800 p-8 rounded-2xl shadow-2xl transition-all duration-300 text-center">
+        <!-- Avatar / Logo -->
+        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-lg">
+            <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-3xl font-bold text-white">
+                🚀
             </div>
         </div>
 
-        <!-- Dashboard Widgets / Funktionen -->
-        <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Widget 1 -->
-            <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-xl">
-                <div class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Live Status</div>
-                <div class="text-2xl font-bold text-emerald-400 mb-1">Aktiv</div>
-                <div class="text-xs text-slate-500">Antwortzeit: <span id="ping-time" class="text-slate-300 font-mono">-- ms</span></div>
-            </div>
+        <h1 class="text-2xl font-bold tracking-tight mb-1">Willkommen auf meiner Seite!</h1>
+        <p class="text-slate-400 text-sm mb-8">Hier entsteht etwas Großartiges. Schau dich gerne um.</p>
 
-            <!-- Widget 2 -->
-            <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-xl">
-                <div class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Echtzeit-Uptime</div>
-                <div id="uptime-clock" class="text-2xl font-bold text-slate-200 font-mono mb-1">00:00:00</div>
-                <div class="text-xs text-slate-500">Seit letztem Check</div>
-            </div>
+        <!-- Beispiel-Links oder Inhalte -->
+        <div class="space-y-3">
+            <a href="https://github.com" target="_blank" class="block w-full bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 rounded-xl font-medium transition-all text-sm flex items-center justify-between">
+                <span>GitHub Profil</span>
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+            <a href="https://discord.com" target="_blank" class="block w-full bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 rounded-xl font-medium transition-all text-sm flex items-center justify-between">
+                <span>Discord Community</span>
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+        </div>
 
-            <!-- Widget 3 -->
-            <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-xl">
-                <div class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">Auto-Aktualisierung</div>
-                <div class="text-2xl font-bold text-indigo-400 mb-1">Aktiv</div>
-                <div class="text-xs text-slate-500">Prüfintervall: Alle 3 Sek.</div>
-            </div>
+        <div class="mt-8 text-xs text-slate-500">
+            Verbindung aktiv via ngrok
         </div>
     </div>
 
-    <!-- JavaScript für Echtzeit-Logik -->
+    <!-- JavaScript Logik -->
     <script>
         const targetUrl = "https://tableful-lustfully-dash.ngrok-free.dev";
         const offlineView = document.getElementById('offline-view');
-        const dashboardView = document.getElementById('dashboard-view');
+        const onlineView = document.getElementById('online-view');
         const statusText = document.getElementById('status-text');
-        const pingTimeEl = document.getElementById('ping-time');
-        const uptimeClock = document.getElementById('uptime-clock');
 
         let isOnline = false;
-        let startTime = Date.now();
-        let timerInterval = null;
 
-        // Funktion zum Prüfen des Status (CORS-freundlich per 'no-cors' oder Bild/Fetch-Request)
         async function checkServerStatus() {
-            const startTimestamp = Date.now();
             try {
-                // Ein Fetch-Versuch auf die ngrok-URL. 
-                // Da ngrok standardmäßig eine Browser-Warnseite vorschalten kann, nutzen wir mode: 'no-cors'
                 await fetch(targetUrl, { mode: 'no-cors', cache: 'no-store' });
-                
-                const latency = Date.now() - startTimestamp;
-                setOnlineState(latency);
+                setOnlineState();
             } catch (error) {
                 setOfflineState();
             }
         }
 
-        function setOnlineState(latency) {
+        function setOnlineState() {
             if (!isOnline) {
                 isOnline = true;
-                startTime = Date.now(); // Uptime zurücksetzen bei neuem Verbindungsaufbau
                 offlineView.classList.add('hidden');
-                dashboardView.classList.remove('hidden');
-                
-                if(!timerInterval) {
-                    timerInterval = setInterval(updateUptime, 1000);
-                }
+                onlineView.classList.remove('hidden');
             }
-            pingTimeEl.textContent = latency + " ms";
         }
 
         function setOfflineState() {
             if (isOnline) {
                 isOnline = false;
-                dashboardView.classList.add('hidden');
+                onlineView.classList.add('hidden');
                 offlineView.classList.remove('hidden');
-                
-                if(timerInterval) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                }
             }
-            statusText.textContent = "Server offline. Nächster Versuch in Kürze...";
+            statusText.textContent = "Server offline. Nächster Versuch...";
         }
 
-        function updateUptime() {
-            const diff = Math.floor((Date.now() - startTime) / 1000);
-            const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
-            const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-            const seconds = String(diff % 60).padStart(2, '0');
-            uptimeClock.textContent = `${hours}:${minutes}:${seconds}`;
-        }
-
-        // Funktion für den "Server neuladen"-Button (Falls dein Backend einen Restart-Endpoint besitzt)
-        async function restartServer() {
-            const btn = document.getElementById('restart-btn');
-            btn.textContent = "Starte neu...";
-            btn.disabled = true;
-
-            try {
-                // Beispiel: Falls dein Server einen Endpunkt wie /restart hat, hier ansprechen:
-                // await fetch(targetUrl + '/restart', { mode: 'no-cors' });
-                
-                // Simulierter Neustart für die UI:
-                setTimeout(() => {
-                    alert("Neustart-Befehl gesendet!");
-                    btn.textContent = "Server Neustarten";
-                    btn.disabled = false;
-                }, 1500);
-            } catch (e) {
-                alert("Fehler beim Neustarten des Servers.");
-                btn.textContent = "Server Neustarten";
-                btn.disabled = false;
-            }
-        }
-
-        // Initial direkt prüfen und dann alle 3 Sekunden wiederholen
+        // Direkt prüfen und alle 3 Sekunden wiederholen
         checkServerStatus();
         setInterval(checkServerStatus, 3000);
     </script>
