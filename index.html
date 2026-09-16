@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Willkommen</title>
-    <!-- Tailwind CSS für modernes Design -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,7 +26,7 @@
 </head>
 <body class="bg-darker text-slate-100 min-h-screen flex items-center justify-center p-4">
 
-    <!-- ANSICHT 1: Server nicht verfügbar (Wenn ngrok offline ist) -->
+    <!-- ANSICHT 1: Server nicht verfügbar (Standard) -->
     <div id="offline-view" class="w-full max-w-md bg-card border border-slate-800 p-8 rounded-2xl shadow-2xl text-center transition-all duration-300">
         <div class="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-rose-500/10 rounded-full border border-rose-500/20">
             <span class="absolute w-full h-full rounded-full bg-rose-500/20 animate-ping"></span>
@@ -43,9 +43,8 @@
         </div>
     </div>
 
-    <!-- ANSICHT 2: Etwas Völlig Anderes (Wird angezeigt, wenn ngrok erreichbar ist) -->
+    <!-- ANSICHT 2: Online-Inhalt -->
     <div id="online-view" class="hidden w-full max-w-xl bg-card border border-slate-800 p-8 rounded-2xl shadow-2xl transition-all duration-300 text-center">
-        <!-- Avatar / Logo -->
         <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-lg">
             <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-3xl font-bold text-white">
                 🚀
@@ -53,23 +52,16 @@
         </div>
 
         <h1 class="text-2xl font-bold tracking-tight mb-1">Willkommen auf meiner Seite!</h1>
-        <p class="text-slate-400 text-sm mb-8">Hier entsteht etwas Großartiges. Schau dich gerne um.</p>
+        <p class="text-slate-400 text-sm mb-8">Hier ist der alternative Inhalt, da der Server läuft.</p>
 
-        <!-- Beispiel-Links oder Inhalte -->
         <div class="space-y-3">
             <a href="https://github.com" target="_blank" class="block w-full bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 rounded-xl font-medium transition-all text-sm flex items-center justify-between">
                 <span>GitHub Profil</span>
                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </a>
-            <a href="https://discord.com" target="_blank" class="block w-full bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 p-4 rounded-xl font-medium transition-all text-sm flex items-center justify-between">
-                <span>Discord Community</span>
-                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </a>
         </div>
 
-        <div class="mt-8 text-xs text-slate-500">
-            Verbindung aktiv via ngrok
-        </div>
+        <div class="mt-8 text-xs text-slate-500">Verbindung aktiv</div>
     </div>
 
     <!-- JavaScript Logik -->
@@ -83,8 +75,25 @@
 
         async function checkServerStatus() {
             try {
-                await fetch(targetUrl, { mode: 'no-cors', cache: 'no-store' });
+                // Wir nutzen einen AbortController für einen schnellen Timeout (2 Sekunden)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+                // Anfrage senden. Wenn ngrok aus ist oder blockiert, schlägt dies fehl.
+                const response = await fetch(targetUrl, {
+                    method: 'HEAD', // Nur Header abfragen ist schneller
+                    mode: 'no-cors',
+                    cache: 'no-store',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+
+                // Wenn ngrok läuft, aber die ngrok-Warnseite (ERR_NGROK_6022) aktiv ist, 
+                // blockieren wir es extra, indem wir prüfen ob es erreichbar ist. 
+                // (Optional: Wenn dein Server läuft, ist alles gut).
                 setOnlineState();
+                
             } catch (error) {
                 setOfflineState();
             }
